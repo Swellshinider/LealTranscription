@@ -51,14 +51,17 @@ def load_model(name: str, device: str) -> WhisperModel:
     return WhisperModel(name, device="cpu", compute_type="int8")
 
 
-def transcribe_file(model: WhisperModel, path: Path, language: str | None, quiet: bool) -> str:
-    """Stream segments to stdout as they decode, return the full transcript."""
+def transcribe_file(
+    model: WhisperModel, path: Path, language: str | None, quiet: bool, *, stream: bool = True
+) -> str:
+    """Optionally stream segments to stdout, returning the full transcript."""
+    start = time.monotonic()
     segments, info = model.transcribe(str(path), language=language, vad_filter=True)
     lines: list[str] = []
-    start = time.monotonic()
     for segment in segments:
         text = segment.text.strip()
-        print(text)
+        if stream:
+            print(text)
         lines.append(text)
     elapsed = time.monotonic() - start
     if not lines:
@@ -97,14 +100,16 @@ def main() -> None:
             had_error = True
             continue
         try:
-            transcripts.append(transcribe_file(model, path, args.language, args.quiet))
+            transcripts.append(
+                transcribe_file(model, path, args.language, args.quiet, stream=not args.output)
+            )
         except Exception as exc:
             print(f"error: failed to transcribe {path}: {exc}", file=sys.stderr)
             had_error = True
 
     full_text = "\n".join(t for t in transcripts if t)
 
-    if args.output:
+    if args.output and transcripts:
         Path(args.output).write_text(full_text, encoding="utf-8")
 
     if args.copy and full_text:
