@@ -1,14 +1,13 @@
 #Requires -Version 5.1
-# Removes the `lt` CLI and, unless -KeepModels is passed, its downloaded
-# faster-whisper models from the HuggingFace cache.
+# Removes the `lt` CLI, keeping shared HuggingFace models by default.
 # Usage: irm https://raw.githubusercontent.com/Swellshinider/LealTranscription/main/uninstall.ps1 | iex
-# With -KeepModels: & ([scriptblock]::Create((irm <url>))) -KeepModels
-param([switch]$KeepModels)
+# With -RemoveModels: & ([scriptblock]::Create((irm <url>))) -RemoveModels
+param([switch]$RemoveModels, [switch]$KeepModels)
 $ErrorActionPreference = 'Stop'
 
 uv tool uninstall leal-transcription
 
-if (-not $KeepModels) {
+if ($RemoveModels -and -not $KeepModels) {
     $hfHome = if ($env:HF_HOME) { $env:HF_HOME } else { "$env:USERPROFILE\.cache\huggingface" }
     $hub = Join-Path $hfHome 'hub'
     Get-ChildItem $hub -Directory -Filter 'models--*faster-whisper*' -ErrorAction SilentlyContinue |

@@ -41,12 +41,15 @@ into the HuggingFace cache; later runs reuse it.
 irm https://raw.githubusercontent.com/Swellshinider/LealTranscription/main/uninstall.ps1 | iex
 ```
 
-Removes the `lt` command and its downloaded models. To keep the models (skip
-deleting the ~1.6 GB cache):
+Removes the `lt` command and keeps downloaded models. To also delete all
+faster-whisper models in the shared HuggingFace cache (including models used by
+other applications), explicitly pass `-RemoveModels`:
 
 ```powershell
-& ([scriptblock]::Create((irm https://raw.githubusercontent.com/Swellshinider/LealTranscription/main/uninstall.ps1))) -KeepModels
+& ([scriptblock]::Create((irm https://raw.githubusercontent.com/Swellshinider/LealTranscription/main/uninstall.ps1))) -RemoveModels
 ```
+
+`-KeepModels` remains supported and overrides `-RemoveModels`.
 
 `uv` itself is left installed, since it's a general-purpose tool manager you may use
 for other projects.
