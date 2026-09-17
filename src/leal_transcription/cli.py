@@ -77,7 +77,7 @@ def transcribe_file(
 
 
 def main() -> None:
-    parser = argparse.ArgumentParser(prog="transcribe", description=__doc__)
+    parser = argparse.ArgumentParser(prog="lt", description=__doc__)
     parser.add_argument("files", nargs="+", metavar="FILE", help="audio/video file(s) to transcribe")
     parser.add_argument("-q", "--quality", choices=PRESETS, default="best")
     parser.add_argument("-m", "--model", help="raw Whisper model name, overrides --quality")

@@ -1,7 +1,7 @@
 [project]
 name = "leal-transcription"
 version = "0.1.0"
-description = "Add your description here"
+description = "Fast local audio transcription CLI backed by faster-whisper + CUDA"
 readme = "README.md"
 authors = [
     { name = "Swellshinider", email = "eduardoleal.contact@gmail.com" }
@@ -15,7 +15,7 @@ dependencies = [
 ]
 
 [project.scripts]
-transcribe = "leal_transcription.cli:main"
+lt = "leal_transcription.cli:main"
 
 [build-system]
 requires = ["uv_build>=0.12.3,<0.13.0"]
