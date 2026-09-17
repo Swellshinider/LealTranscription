@@ -1,4 +1,4 @@
-# Leal Transcription
+# LealTranscription
 
 Fast local audio transcription CLI for Windows, backed by
 [faster-whisper](https://github.com/SYSTRAN/faster-whisper) with CUDA acceleration
@@ -116,5 +116,5 @@ for other projects.
 
 ## License
 
-Leal Transcription is licensed under the [MIT License](LICENSE).
+LealTranscription is licensed under the [MIT License](LICENSE).
 Dependencies and downloaded models retain their own licenses.
