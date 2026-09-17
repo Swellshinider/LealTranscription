@@ -1,0 +1,5 @@
+blank_issues_enabled: true
+contact_links:
+  - name: Report a security vulnerability privately
+    url: https://github.com/Swellshinider/LealTranscription/security/advisories/new
+    about: Read SECURITY.md if private reporting is unavailable. Do not post vulnerabilities in public issues.
