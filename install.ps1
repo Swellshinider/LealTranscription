@@ -10,6 +10,8 @@ if (-not (Get-Command uv -ErrorAction SilentlyContinue)) {
 }
 
 uv tool install --force git+https://github.com/Swellshinider/LealTranscription.git
+if ($LASTEXITCODE -ne 0) { throw 'uv tool install failed.' }
 uv tool update-shell
+if ($LASTEXITCODE -ne 0) { throw 'uv tool update-shell failed.' }
 
 Write-Host 'Done. Open a new terminal, then: lt "audio.wav" --copy'

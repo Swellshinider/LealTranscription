@@ -6,6 +6,7 @@ param([switch]$RemoveModels, [switch]$KeepModels)
 $ErrorActionPreference = 'Stop'
 
 uv tool uninstall leal-transcription
+if ($LASTEXITCODE -ne 0) { throw 'uv tool uninstall failed.' }
 
 if ($RemoveModels -and -not $KeepModels) {
     $hfHome = if ($env:HF_HOME) { $env:HF_HOME } else { "$env:USERPROFILE\.cache\huggingface" }
