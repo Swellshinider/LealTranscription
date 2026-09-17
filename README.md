@@ -50,6 +50,8 @@ other applications), explicitly pass `-RemoveModels`:
 ```
 
 `-KeepModels` remains supported and overrides `-RemoveModels`.
+Cleanup honors `HF_HUB_CACHE`, `HUGGINGFACE_HUB_CACHE`, `HF_HOME`, and
+`XDG_CACHE_HOME`, in that order, before using the default cache.
 
 `uv` itself is left installed, since it's a general-purpose tool manager you may use
 for other projects.

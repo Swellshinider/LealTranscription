@@ -30,4 +30,31 @@ foreach ($failure in @('install', 'update-shell', 'uninstall')) {
     if ($failure -eq 'install' -and $script:calls.Count -ne 1) { throw 'Install continued after failure' }
     if ($script:scans -ne 1) { throw 'Failed uninstall must not clean models' }
 }
+function uv { $global:LASTEXITCODE = 0 }
+function Get-ChildItem { param($LiteralPath) $script:cachePath = $LiteralPath }
+$cacheVariables = @('HF_HUB_CACHE', 'HUGGINGFACE_HUB_CACHE', 'HF_HOME', 'XDG_CACHE_HOME')
+$saved = @{}
+foreach ($name in $cacheVariables) {
+    $saved[$name] = [Environment]::GetEnvironmentVariable($name)
+    [Environment]::SetEnvironmentVariable($name, $null)
+}
+try {
+    & $uninstall -RemoveModels
+    if ($script:cachePath -ne "$env:USERPROFILE\.cache\huggingface\hub") { throw 'Wrong default cache' }
+    foreach ($case in @(
+        @('XDG_CACHE_HOME', 'C:\test-cache', 'C:\test-cache\huggingface\hub'),
+        @('HF_HOME', 'C:\test-hf', 'C:\test-hf\hub'),
+        @('HUGGINGFACE_HUB_CACHE', 'C:\test-legacy', 'C:\test-legacy'),
+        @('HF_HUB_CACHE', 'C:\test-hub', 'C:\test-hub'),
+        @('HF_HUB_CACHE', '~\test-hub', "$env:USERPROFILE\test-hub"),
+        @('HF_HUB_CACHE', '%USERPROFILE%\test-hub', "$env:USERPROFILE\test-hub"),
+        @('HF_HUB_CACHE', '${USERPROFILE}\test-hub', "$env:USERPROFILE\test-hub")
+    )) {
+        [Environment]::SetEnvironmentVariable($case[0], $case[1])
+        & $uninstall -RemoveModels
+        if ($script:cachePath -ne $case[2]) { throw "Wrong cache precedence or expansion: $($case[0])" }
+    }
+} finally {
+    foreach ($name in $cacheVariables) { [Environment]::SetEnvironmentVariable($name, $saved[$name]) }
+}
 Write-Host 'Script checks passed.'
